@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+    <title>Data Visualization</title>
+    <style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+    </style>
+    <meta http-equiv="refresh" content="{{refresh}}">
+    </head>
+    <body>
+        <h1>Data Visualization</h1>
+        <table>
+            <tr>
+                <th>Device Id</th>
+                <th>Configuration</th>
+                <th>Status</th>
+            </tr>
+            {% for user_data in all_data %}
+            <tr>
+                <th>{{user_data['id_device']}}</th>
+                <th>{{user_data['config']}}</th>
+                {% if user_data['status'] %}
+                    <th>True</th>
+                {% else %}
+                    <th>False</th>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </table>
+        <h2>Data from devices</h2>
+        <table>
+            {% for user_data in all_data %}
+            <tr>
+                <th>Id Device: {{user_data['id_device']}}</th>
+                {% for data in user_data['data'] %}
+                    <th>{{data}}</th>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </table>
+    </body>
+</html>
