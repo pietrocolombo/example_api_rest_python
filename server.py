@@ -86,7 +86,34 @@ class DataDevice(Resource):
         else:
             return '', 404
 
+        
+class DeviceStatus(Resource):
+    def get(self, id_device):
+        """ is the device online?
 
+        :param id_device: id device
+        :return:
+        """
+        args = device_time_check_connection_args.parse_args()
+        # check if the last data from the device is recent
+        seconds = time.time() - args['time_check']
+        data = Data.query.with_entities(Data.data).filter(Data.id_device == id_device,
+                                                          Data.timestamp >= seconds).all()
+        device = Device.query.get(id_device)
+        if not data:
+            device.status = False
+            db.session.add(device)
+            db.session.commit()
+
+        response = app.response_class(
+            response=json.dumps(device.status),
+            status=200,
+            mimetype='application/json')
+
+        return response
+
+
+api.add_resource(DeviceStatus, "/device_status/<int:id_device>")
 api.add_resource(DataDevice, "/data_device")
 
 @app.route("/")
